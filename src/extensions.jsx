@@ -12,8 +12,10 @@ export const Find = {
       runApplescript({
         script:
         `
-        set thePath to POSIX file "${path}"
-        tell application "Finder" to reveal thePath
+        tell application "Finder"
+          reveal POSIX file "${path}" as text
+          activate
+        end tell
         `
       })
     }

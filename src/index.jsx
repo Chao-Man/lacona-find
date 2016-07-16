@@ -1,13 +1,13 @@
 /** @jsx createElement */
 import { createElement } from 'elliptical'
 import { Application, Command, Directory, File } from 'lacona-phrases'
-import { runApplescript, callSystem } from 'lacona-api'
+import { runApplescript } from 'lacona-api'
+import { exec } from 'child_process'
 
 export const Find = {
   extends: [Command],
 
   execute (result) {
-
     function reveal (path) {
       runApplescript({
         script:
@@ -21,13 +21,14 @@ export const Find = {
     }
 
     var callback = function(err, stdout, stderr) {
+      console.log(stdout);
       var path = stdout.substring(0, stdout.length - 1);
       reveal(path)
     }
 
     if (result.discovered.app) {
-      var cmd = `mdfind kMDItemCFBundleIdentifier = "${result.discovered.app.bundleId}"`
-      callSystem({command: "/bin/bash", args: ['-c', cmd]}, callback)
+      var path = result.discovered.app.path;
+      reveal(path)
     }
     else {
       var path = result.discovered.path
@@ -49,4 +50,4 @@ export const Find = {
   }
 }
 
-export default [Find]
+export const extensions = [Find]
